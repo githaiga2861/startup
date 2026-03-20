@@ -1,1 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Minds ⭐ — Learn, Play & Shine Bright!</title>
+<link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #00D4FF;
+    --yellow: #FFEB3B;
+    --purple: #9C27B0;
+    --purple-dark: #6A0080;
+    --pink: #FF6B9D;
+    --mint: #00E5CC;
+    --lilac: #CE93D8;
+    --white: #FFFFFF;
+    --space: #0A0520;
+    --space2: #110833;
+    --space3: #1A0A45;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--space);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ─── STARS CANVAS ─── */
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    background: rgba(10,5,32,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.8rem;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo .star-spin {
+    display: inline-block;
+    animation: spinStar 4s linear infinite;
+    font-size: 1.4rem;
+  }
+
+  @keyframes spinStar {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--blue);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .btn-nav {
+    background: linear-gradient(135deg, var(--yellow), #FF9800);
+    color: #1a0a00;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1rem;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c67c00, 0 6px 20px rgba(255,152,0,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c67c00, 0 8px 28px rgba(255,152,0,0.5); }
+  .btn-nav:active { transform: translateY(2px); box-shadow: 0 2px 0 #c67c00, 0 4px 12px rgba(255,152,0,0.3); }
+
+  /* hamburger */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 200; }
+  .hamburger span { width: 26px; height: 3px; background: white; border-radius: 3px; transition: 0.3s; }
+
+  /* Mobile overlay */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,5,32,0.97);
+    z-index: 150;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 2rem;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .mobile-menu a:hover { color: var(--yellow); transform: scale(1.08); }
+
+  .mobile-close {
+    position: absolute;
+    top: 20px; right: 28px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+  }
+
+  /* ─── SECTIONS BASE ─── */
+  section { position: relative; z-index: 1; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 60px;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, #1A0A6A 0%, #0A0520 70%);
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.35);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 28px;
+    animation: floatUp 0.8s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    animation: floatUp 0.8s 0.15s ease both;
+  }
+
+  .hero h1 .shine {
+    background: linear-gradient(90deg, var(--yellow), var(--pink), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+  }
+
+  .hero p {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: rgba(255,255,255,0.7);
+    max-width: 500px;
+    margin-bottom: 40px;
+    font-weight: 600;
+    animation: floatUp 0.8s 0.3s ease both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: floatUp 0.8s 0.45s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    color: white;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.15rem;
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #005599, 0 8px 30px rgba(0,212,255,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 40%; height: 200%;
+    background: rgba(255,255,255,0.25);
+    transform: skewX(-20deg);
+    transition: left 0.5s;
+  }
+
+  .btn-primary:hover::before { left: 130%; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #005599, 0 12px 40px rgba(0,212,255,0.5); }
+  .btn-primary:active { transform: translateY(3px); box-shadow: 0 2px 0 #005599; }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, var(--yellow), #FFC107);
+    color: #1a0a00;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.15rem;
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #b38600, 0 8px 30px rgba(255,235,59,0.35);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #b38600, 0 12px 40px rgba(255,235,59,0.5); }
+  .btn-secondary:active { transform: translateY(3px); box-shadow: 0 2px 0 #b38600; }
+
+  /* Floating planets */
+  .planet {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+    100% { transform: translateY(0) rotate(360deg); }
+  }
+
+  .rocket {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: rocketFly 12s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rocketFly {
+    0% { transform: translate(-100px, 0) rotate(-20deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translate(calc(100vw + 200px), -80px) rotate(-20deg); opacity: 0; }
+  }
+
+  /* ─── SUBJECTS ─── */
+  .subjects {
+    padding: 90px 24px;
+    background: linear-gradient(180deg, #0A0520 0%, #110833 100%);
+  }
+
+  .section-title {
+    text-align: center;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 12px;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 56px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .subject-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 36px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s, border-color 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-glow, rgba(0,212,255,0.08));
+    border-radius: 28px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .subject-card:hover::before { opacity: 1; }
+  .subject-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 24px 60px var(--card-shadow, rgba(0,212,255,0.25));
+    border-color: var(--card-border, rgba(0,212,255,0.4));
+  }
+
+  .subject-card:active { transform: translateY(-4px) scale(0.98); }
+
+  .card-icon {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    display: block;
+    animation: floatBob 3s ease-in-out infinite;
+  }
+
+  @keyframes floatBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .subject-card:nth-child(2) .card-icon { animation-delay: 0.4s; }
+  .subject-card:nth-child(3) .card-icon { animation-delay: 0.8s; }
+  .subject-card:nth-child(4) .card-icon { animation-delay: 1.2s; }
+  .subject-card:nth-child(5) .card-icon { animation-delay: 1.6s; }
+
+  .card-title {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 600;
+  }
+
+  .card-stars {
+    margin-top: 16px;
+    color: var(--yellow);
+    font-size: 0.9rem;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how {
+    padding: 90px 24px;
+    background: linear-gradient(180deg, #110833 0%, #0D0628 100%);
+  }
+
+  .steps {
+    display: flex;
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: calc(16.66% + 20px);
+    right: calc(16.66% + 20px);
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--purple), var(--yellow));
+    border-radius: 3px;
+  }
+
+  .step {
+    flex: 1;
+    text-align: center;
+    padding: 0 16px;
+    animation: fadeInUp 0.6s ease both;
+  }
+
+  .step:nth-child(2) { animation-delay: 0.2s; }
+  .step:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-num {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-num.s1 { background: linear-gradient(135deg, #00D4FF, #0055FF); box-shadow: 0 8px 32px rgba(0,212,255,0.5); }
+  .step-num.s2 { background: linear-gradient(135deg, #9C27B0, #E040FB); box-shadow: 0 8px 32px rgba(156,39,176,0.5); }
+  .step-num.s3 { background: linear-gradient(135deg, #FFEB3B, #FF9800); box-shadow: 0 8px 32px rgba(255,235,59,0.5); color: #1a0a00; }
+
+  .step h3 {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+
+  .step p { font-size: 0.9rem; color: rgba(255,255,255,0.55); font-weight: 600; }
+
+  /* ─── FEATURED ─── */
+  .featured {
+    padding: 90px 24px;
+    background: linear-gradient(180deg, #0D0628 0%, #110833 100%);
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,212,255,0.2);
+  }
+
+  .feature-thumb {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+  }
+
+  .feature-thumb.vid { background: linear-gradient(135deg, #00D4FF22, #0055FF44); }
+  .feature-thumb.game { background: linear-gradient(135deg, #9C27B022, #E040FB44); }
+  .feature-thumb.quiz { background: linear-gradient(135deg, #FFEB3B22, #FF980044); }
+
+  .play-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--yellow);
+    color: #1a0a00;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    border-radius: 50px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+  }
+
+  .feature-body { padding: 20px; }
+  .feature-body h3 { font-family: 'Bubblegum Sans', cursive; font-size: 1.15rem; margin-bottom: 6px; }
+  .feature-body p { font-size: 0.85rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    padding: 100px 24px;
+    text-align: center;
+    background: radial-gradient(ellipse 70% 70% at 50% 50%, #1A0A6A 0%, #0A0520 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section h2 {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 16px;
+  }
+
+  .cta-section p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 420px;
+    margin: 0 auto 36px;
+    font-weight: 600;
+  }
+
+  .btn-cta {
+    background: linear-gradient(135deg, var(--purple), #E040FB);
+    color: white;
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.3rem;
+    padding: 18px 52px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #4A0066, 0 10px 40px rgba(156,39,176,0.5);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-cta::after {
+    content: '✨';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    animation: twinkle 1.5s ease-in-out infinite;
+  }
+
+  @keyframes twinkle { 0%,100%{opacity:1;transform:translateY(-50%) scale(1)} 50%{opacity:0.5;transform:translateY(-50%) scale(0.7)} }
+
+  .btn-cta:hover { transform: translateY(-4px); box-shadow: 0 10px 0 #4A0066, 0 14px 50px rgba(156,39,176,0.6); }
+  .btn-cta:active { transform: translateY(4px); box-shadow: 0 2px 0 #4A0066; }
+
+  /* Star counter badge */
+  .star-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,235,59,0.12);
+    border: 1px solid rgba(255,235,59,0.3);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'Bubblegum Sans', cursive;
+    color: var(--yellow);
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 48px 40px 32px;
+    background: #060214;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  footer .logo-foot {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 1.5rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-links a {
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--blue); }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.25);
+    font-weight: 600;
+  }
+
+  /* ─── PROGRESS RING ─── */
+  .progress-ring-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ─── REWARD FLOATING BADGE ─── */
+  .reward-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    background: linear-gradient(135deg, var(--purple), #E040FB);
+    border-radius: 50px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 32px rgba(156,39,176,0.5);
+    cursor: pointer;
+    animation: floatBob 3s ease-in-out infinite;
+    transition: transform 0.2s;
+  }
+
+  .reward-float:hover { transform: scale(1.08); }
+
+  .reward-float .rf-icon { font-size: 1.5rem; }
+
+  .reward-float .rf-text {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 0.95rem;
+    line-height: 1.1;
+  }
+
+  .rf-count {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes floatUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* ─── SPARKLES ─── */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.2rem;
+    animation: sparkleUp 0.8s ease forwards;
+    z-index: 999;
+  }
+
+  @keyframes sparkleUp {
+    0% { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    .steps { flex-direction: column; gap: 32px; }
+    .steps::before { display: none; }
+
+    .hero { padding: 100px 20px 60px; }
+  }
+
+  @media (max-width: 480px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .featured-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STARFIELD -->
+<canvas id="starfield"></canvas>
+
+<!-- FLOATING REWARD BADGE -->
+<div class="reward-float" onclick="showSparkles(event)">
+  <span class="rf-icon">⭐</span>
+  <div class="rf-text">
+    Stars Earned<br>
+    <span class="rf-count">0 stars today</span>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" onclick="toggleMenu()">✕</span>
+  <a href="#home" onclick="toggleMenu()">🏠 Home</a>
+  <a href="#subjects" onclick="toggleMenu()">📚 Lessons</a>
+  <a href="#featured" onclick="toggleMenu()">🎮 Games</a>
+  <a href="#rewards" onclick="toggleMenu()">🏆 Rewards</a>
+  <a href="#parent" onclick="toggleMenu()">👨‍👩‍👧 Parent Zone</a>
+  <a href="#cta" class="btn-nav" onclick="toggleMenu()" style="margin-top:8px">Sign Up Free</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">
+    Star Minds <span class="star-spin">⭐</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#subjects">Lessons</a></li>
+    <li><a href="#featured">Games</a></li>
+    <li><a href="#how">Rewards</a></li>
+    <li><a href="#parent">Parent Zone</a></li>
+  </ul>
+  <a href="#cta" class="btn-nav">Login / Sign Up 🚀</a>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <!-- Decorative planets -->
+  <div class="planet" style="width:120px;height:120px;background:radial-gradient(circle at 35% 35%,#5B21B6,#1A0A45);top:15%;left:5%;animation-duration:8s;opacity:0.6;"></div>
+  <div class="planet" style="width:60px;height:60px;background:radial-gradient(circle at 35% 35%,#00D4FF,#005599);top:20%;right:8%;animation-duration:6s;opacity:0.7;"></div>
+  <div class="planet" style="width:80px;height:80px;background:radial-gradient(circle at 35% 35%,#FF6B9D,#7B0038);bottom:20%;left:10%;animation-duration:10s;opacity:0.5;"></div>
+  <div class="planet" style="width:40px;height:40px;background:radial-gradient(circle at 35% 35%,#FFEB3B,#FF6600);bottom:25%;right:12%;animation-duration:7s;opacity:0.7;"></div>
+  <div class="rocket" style="top:30%;animation-duration:18s;">🚀</div>
+  <div class="rocket" style="top:55%;animation-duration:24s;animation-delay:-8s;font-size:1.8rem;">🛸</div>
+
+  <div class="hero-badge">🌟 Trusted by 50,000+ young learners</div>
+
+  <h1>Learn, Play &<br><span class="shine">Shine Bright!</span></h1>
+
+  <p>Fun, gamified learning adventures for curious young minds aged 4–10.</p>
+
+  <div class="hero-btns">
+    <a href="#subjects" class="btn-primary" onclick="showSparkles(event)">🚀 Start Learning</a>
+    <a href="#featured" class="btn-secondary" onclick="showSparkles(event)">🎮 Explore Games</a>
+  </div>
+</section>
+
+<!-- SUBJECTS -->
+<section class="subjects" id="subjects">
+  <h2 class="section-title">Pick Your Adventure 🌈</h2>
+  <p class="section-sub">Tap a subject to begin your learning journey!</p>
+
+  <div class="cards-grid">
+    <div class="subject-card" style="--card-glow:rgba(0,212,255,0.1);--card-shadow:rgba(0,212,255,0.3);--card-border:rgba(0,212,255,0.4);" onclick="showSparkles(event)">
+      <span class="card-icon">🔢</span>
+      <div class="card-title">Math Magic</div>
+      <div class="card-desc">Numbers, shapes & puzzles</div>
+      <div class="card-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <div class="subject-card" style="--card-glow:rgba(255,107,157,0.1);--card-shadow:rgba(255,107,157,0.3);--card-border:rgba(255,107,157,0.4);" onclick="showSparkles(event)">
+      <span class="card-icon">📖</span>
+      <div class="card-title">Reading Quest</div>
+      <div class="card-desc">Stories & phonics fun</div>
+      <div class="card-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <div class="subject-card" style="--card-glow:rgba(0,229,204,0.1);--card-shadow:rgba(0,229,204,0.3);--card-border:rgba(0,229,204,0.4);" onclick="showSparkles(event)">
+      <span class="card-icon">🔬</span>
+      <div class="card-title">Science Lab</div>
+      <div class="card-desc">Experiments & discoveries</div>
+      <div class="card-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <div class="subject-card" style="--card-glow:rgba(255,235,59,0.1);--card-shadow:rgba(255,235,59,0.3);--card-border:rgba(255,235,59,0.4);" onclick="showSparkles(event)">
+      <span class="card-icon">🎨</span>
+      <div class="card-title">Art & Creativity</div>
+      <div class="card-desc">Draw, paint & create</div>
+      <div class="card-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <div class="subject-card" style="--card-glow:rgba(156,39,176,0.1);--card-shadow:rgba(156,39,176,0.3);--card-border:rgba(156,39,176,0.4);" onclick="showSparkles(event)">
+      <span class="card-icon">🚀</span>
+      <div class="card-title">Space Adventure</div>
+      <div class="card-desc">Planets, stars & cosmos</div>
+      <div class="card-stars">⭐⭐⭐⭐⭐</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <h2 class="section-title">How It Works ✨</h2>
+  <p class="section-sub">3 simple steps to start shining!</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num s1">1</div>
+      <h3>Choose a Subject</h3>
+      <p>Pick from Math, Reading, Science, Art, or Space — whatever sparks your curiosity!</p>
+    </div>
+    <div class="step">
+      <div class="step-num s2">2</div>
+      <h3>Watch & Learn</h3>
+      <p>Enjoy fun animated lessons designed just for kids your age. No boring stuff here!</p>
+    </div>
+    <div class="step">
+      <div class="step-num s3">3</div>
+      <h3>Play & Earn Stars ⭐</h3>
+      <p>Complete games and quizzes to earn stars, unlock badges, and level up your brain!</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured" id="featured">
+  <h2 class="section-title">What's Hot Right Now 🔥</h2>
+  <p class="section-sub">Latest videos, games & quizzes waiting for you</p>
+
+  <div class="featured-grid">
+    <div class="feature-card" onclick="showSparkles(event)">
+      <div class="feature-thumb vid">
+        🎬
+        <span class="play-badge">▶ NEW VIDEO</span>
+      </div>
+      <div class="feature-body">
+        <h3>Counting Planets 🪐</h3>
+        <p>Join Luna on a rocket trip through our solar system!</p>
+      </div>
+    </div>
+    <div class="feature-card" onclick="showSparkles(event)">
+      <div class="feature-thumb game">
+        🎮
+        <span class="play-badge">PLAY NOW</span>
+      </div>
+      <div class="feature-body">
+        <h3>Alphabet Jumble 🔡</h3>
+        <p>Sort the letters before time runs out — can you beat your score?</p>
+      </div>
+    </div>
+    <div class="feature-card" onclick="showSparkles(event)">
+      <div class="feature-thumb quiz">
+        ❓
+        <span class="play-badge">QUIZ TIME</span>
+      </div>
+      <div class="feature-body">
+        <h3>Dino Trivia Quiz 🦕</h3>
+        <p>10 questions about dinosaurs — are you a Dino Expert?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REWARDS TEASER -->
+<section id="rewards" style="padding:80px 24px;background:linear-gradient(180deg,#110833,#0D0628);text-align:center;">
+  <h2 class="section-title">🏆 Your Trophy Room</h2>
+  <p class="section-sub">Earn badges & level up as you learn</p>
+
+  <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;max-width:700px;margin:0 auto;">
+    <!-- Badge placeholders -->
+    <div style="background:rgba(255,255,255,0.05);border:2px dashed rgba(255,235,59,0.3);border-radius:20px;padding:28px 20px;width:140px;text-align:center;opacity:0.6;">
+      <div style="font-size:2.5rem;">🔒</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:0.9rem;margin-top:8px;color:rgba(255,255,255,0.5);">Math Star</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:2px solid rgba(0,212,255,0.4);border-radius:20px;padding:28px 20px;width:140px;text-align:center;box-shadow:0 0 30px rgba(0,212,255,0.2);">
+      <div style="font-size:2.5rem;">⭐</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:0.9rem;margin-top:8px;color:var(--yellow);">First Star!</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:2px dashed rgba(156,39,176,0.3);border-radius:20px;padding:28px 20px;width:140px;text-align:center;opacity:0.6;">
+      <div style="font-size:2.5rem;">🔒</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:0.9rem;margin-top:8px;color:rgba(255,255,255,0.5);">Reader</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:2px dashed rgba(255,107,157,0.3);border-radius:20px;padding:28px 20px;width:140px;text-align:center;opacity:0.6;">
+      <div style="font-size:2.5rem;">🔒</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:0.9rem;margin-top:8px;color:rgba(255,255,255,0.5);">Scientist</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div style="max-width:400px;margin:40px auto 0;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+      <span style="font-family:'Bubblegum Sans',cursive;font-size:0.9rem;">Level 1 — Star Cadet</span>
+      <span style="font-size:0.85rem;color:var(--yellow);font-weight:700;">20 / 100 ⭐</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:50px;height:14px;overflow:hidden;">
+      <div style="width:20%;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:50px;box-shadow:0 0 16px rgba(0,212,255,0.5);animation:growBar 1.5s ease both;"></div>
+    </div>
+  </div>
+
+  <style>@keyframes growBar{from{width:0}to{width:20%}}</style>
+</section>
+
+<!-- PARENT ZONE -->
+<section id="parent" style="padding:80px 24px;background:linear-gradient(180deg,#0D0628,#080218);text-align:center;">
+  <h2 class="section-title">👨‍👩‍👧 Parent Zone</h2>
+  <p class="section-sub">Track progress, set goals & keep learning safe</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:900px;margin:0 auto;">
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:left;">
+      <div style="font-size:2rem;margin-bottom:12px;">📊</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:1.1rem;margin-bottom:6px;">Progress Reports</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.45);font-weight:600;">Weekly summaries of your child's learning journey.</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:left;">
+      <div style="font-size:2rem;margin-bottom:12px;">⏱️</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:1.1rem;margin-bottom:6px;">Screen Time Limits</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.45);font-weight:600;">Set daily time limits and learning schedules.</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:left;">
+      <div style="font-size:2rem;margin-bottom:12px;">🔒</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:1.1rem;margin-bottom:6px;">Safe & Secure</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.45);font-weight:600;">COPPA compliant. No ads. No external links.</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:left;">
+      <div style="font-size:2rem;margin-bottom:12px;">🎯</div>
+      <div style="font-family:'Bubblegum Sans',cursive;font-size:1.1rem;margin-bottom:6px;">Learning Goals</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.45);font-weight:600;">Set custom goals and track milestones together.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="star-counter">⭐ Join 50,000+ Star Minds already learning</div>
+  <h2>Ready to Shine Bright? 🌟</h2>
+  <p>Sign up free and start your child's adventure in learning today!</p>
+  <a href="#" class="btn-cta" onclick="showSparkles(event)">Sign Up Free &nbsp;&nbsp;&nbsp;&nbsp;</a>
+  <p style="margin-top:20px;font-size:0.82rem;color:rgba(255,255,255,0.35);font-weight:600;">No credit card required · Safe for kids · Cancel anytime</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo-foot">Star Minds ⭐</div>
+  <div class="footer-links">
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Parent Info</a>
+    <a href="#">Terms of Use</a>
+  </div>
+  <div class="footer-copy">© 2026 Star Minds. Made with ❤️ for curious young minds.</div>
+</footer>
+
+<script>
+  // ─── STARFIELD ───
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 180; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.8 + 0.3,
+        a: Math.random(),
+        speed: Math.random() * 0.4 + 0.1,
+        twinkle: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const t = Date.now() / 1000;
+    stars.forEach(s => {
+      s.twinkle += 0.02;
+      const alpha = 0.4 + 0.6 * Math.abs(Math.sin(s.twinkle));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  resize();
+  initStars();
+  drawStars();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+
+  // ─── MOBILE MENU ───
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ─── SPARKLES ───
+  function showSparkles(e) {
+    const emojis = ['⭐','✨','🌟','💫','🎉'];
+    const count = 8;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'sparkle';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      const angle = (Math.PI * 2 / count) * i;
+      const dist = 60 + Math.random() * 60;
+      el.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      el.style.setProperty('--dy', Math.sin(angle) * dist - 40 + 'px');
+      el.style.left = (e.clientX - 12) + 'px';
+      el.style.top = (e.clientY - 12) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+  }
+
+  // Sparkles on all .subject-card and .feature-card clicks
+  document.querySelectorAll('.subject-card, .feature-card').forEach(card => {
+    card.addEventListener('click', showSparkles);
+  });
+</script>
+</body>
+</html>
